@@ -1,0 +1,22 @@
+
+# ── Generado por setup-agile.sh ──────────────────────────
+# Frontend
+frontend/.next/
+frontend/node_modules/
+frontend/.env.local
+
+# Backend
+backend/target/
+backend/.env
+*.class
+*.jar
+*.war
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
