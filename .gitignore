@@ -9,7 +9,6 @@ backend/.env
 *.class
 *.jar
 *.war
-backend/src/main/resources/application.properties (old)
 
 # IDEs
 .idea/

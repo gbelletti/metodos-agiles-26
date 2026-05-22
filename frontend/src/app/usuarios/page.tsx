@@ -184,11 +184,12 @@ export default function UsuariosPage() {
       `}</style>
 
       <div className="shell">
+        {/*  quedo obsoleto porque ahora hay un header global
         <header className="topbar">
           <span className="topbar-logo">SisLic · Admin</span>
           <span className="topbar-sep" />
           <span className="topbar-hint">Sistema de Licencias</span>
-        </header>
+        </header>*/}
 
         <main className="main">
           {/* Breadcrumb para volver al menú principal */}

@@ -144,12 +144,12 @@ export default function HomePage() {
       `}</style>
 
       <div className="shell">
-        {/* Barra superior (idéntica a las otras páginas) */}
+        {/*  quedo obsoleto porque ahora hay un header global
         <header className="topbar">
           <span className="topbar-logo">SisLic · Admin</span>
           <span className="topbar-sep" />
           <span className="topbar-hint">Sistema de Licencias</span>
-        </header>
+        </header>*/}
 
         <main className="main">
           <div className="page-eyebrow">Panel principal</div>
