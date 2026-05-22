@@ -32,10 +32,7 @@ public class UsuarioDAO {
 
     // Dar de alta
     public UsuarioResponseDTO crear(UsuarioRequestDTO dto) {
-        if (repo.existsByNombreUsuario(dto.getNombreUsuario())) {
-            throw new RuntimeException("USUARIO_DUPLICADO");
-        }
-
+        // La validación de duplicado la hace el Service; acá podemos omitirla o mantenerla como red de seguridad.
         Usuario u = new Usuario();
         u.setNombre(dto.getNombre());
         u.setApellido(dto.getApellido());
@@ -54,7 +51,7 @@ public class UsuarioDAO {
     // Modificar
     public Optional<UsuarioResponseDTO> modificar(Long id, UsuarioRequestDTO dto) {
         return repo.findById(id).map(u -> {
-            // Si cambia el nombre de usuario, verificar que no exista
+            // Si cambia el nombre de usuario, verificar que no exista (red de seguridad)
             if (!u.getNombreUsuario().equals(dto.getNombreUsuario())
                     && repo.existsByNombreUsuario(dto.getNombreUsuario())) {
                 throw new RuntimeException("USUARIO_DUPLICADO");
@@ -72,6 +69,11 @@ public class UsuarioDAO {
 
             return toDTO(repo.save(u));
         });
+    }
+
+    // Método auxiliar para que el Service pueda chequear unicidad
+    public boolean existeNombreUsuario(String nombreUsuario) {
+        return repo.existsByNombreUsuario(nombreUsuario);
     }
 
     // Mapper entidad → DTO

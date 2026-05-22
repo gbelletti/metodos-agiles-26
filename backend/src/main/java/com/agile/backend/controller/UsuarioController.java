@@ -1,8 +1,8 @@
 package com.agile.backend.controller;
 
-import com.agile.backend.dao.UsuarioDAO;
 import com.agile.backend.dto.UsuarioRequestDTO;
 import com.agile.backend.dto.UsuarioResponseDTO;
+import com.agile.backend.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,16 +15,16 @@ import java.util.List;
 public class UsuarioController {
 
     @Autowired
-    private UsuarioDAO dao;
+    private UsuarioService service;
 
     @GetMapping
     public List<UsuarioResponseDTO> listar() {
-        return dao.listarTodos();
+        return service.listarTodos();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioResponseDTO> buscar(@PathVariable Long id) {
-        return dao.buscarPorId(id)
+        return service.buscarPorId(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -32,26 +32,28 @@ public class UsuarioController {
     @PostMapping
     public ResponseEntity<?> crear(@RequestBody UsuarioRequestDTO dto) {
         try {
-            return ResponseEntity.ok(dao.crear(dto));
+            return ResponseEntity.ok(service.crear(dto));
         } catch (RuntimeException e) {
-            if ("USUARIO_DUPLICADO".equals(e.getMessage())) {
-                return ResponseEntity.status(409).body("El nombre de usuario ya existe.");
+            String msg = e.getMessage();
+            if (msg.contains("nombre de usuario ya existe")) {
+                return ResponseEntity.status(409).body(msg);
             }
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.badRequest().body(msg);
         }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> modificar(@PathVariable Long id, @RequestBody UsuarioRequestDTO dto) {
         try {
-            return dao.modificar(id, dto)
+            return service.modificar(id, dto)
                     .map(ResponseEntity::ok)
                     .orElse(ResponseEntity.notFound().build());
         } catch (RuntimeException e) {
-            if ("USUARIO_DUPLICADO".equals(e.getMessage())) {
-                return ResponseEntity.status(409).body("El nombre de usuario ya existe.");
+            String msg = e.getMessage();
+            if (msg.contains("nombre de usuario ya existe")) {
+                return ResponseEntity.status(409).body(msg);
             }
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.badRequest().body(msg);
         }
     }
 }
