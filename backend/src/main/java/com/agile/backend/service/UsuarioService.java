@@ -26,34 +26,32 @@ public class UsuarioService {
 
     public UsuarioResponseDTO crear(UsuarioRequestDTO dto) {
         validarUsuario(dto, null);
+        // Forzar rol ADMIN
+        dto.setRol("ADMIN");
         return dao.crear(dto);
     }
 
     public Optional<UsuarioResponseDTO> modificar(Long id, UsuarioRequestDTO dto) {
         validarUsuario(dto, id);
+        // Mantener el rol existente (no se envía desde el front)
         return dao.modificar(id, dto);
     }
 
     private void validarUsuario(UsuarioRequestDTO dto, Long id) {
         List<String> errores = new ArrayList<>();
 
-        // Nombre obligatorio
         if (dto.getNombre() == null || dto.getNombre().isBlank())
             errores.add("El nombre es obligatorio.");
-        // Apellido obligatorio
         if (dto.getApellido() == null || dto.getApellido().isBlank())
             errores.add("El apellido es obligatorio.");
-        // Nombre de usuario obligatorio y único
         if (dto.getNombreUsuario() == null || dto.getNombreUsuario().isBlank())
             errores.add("El nombre de usuario es obligatorio.");
         else {
             if (id == null) {
-                // Alta: el nombre de usuario no debe existir
                 if (dao.existeNombreUsuario(dto.getNombreUsuario())) {
                     errores.add("El nombre de usuario ya existe.");
                 }
             } else {
-                // Modificación: si cambió, debe ser único
                 Optional<UsuarioResponseDTO> existente = dao.buscarPorId(id);
                 if (existente.isPresent() &&
                     !existente.get().getNombreUsuario().equals(dto.getNombreUsuario()) &&
@@ -63,21 +61,17 @@ public class UsuarioService {
             }
         }
 
-        // Validación de contraseña
-        if (id == null) { // ALTA
+        if (id == null) {
             if (dto.getContrasena() == null || dto.getContrasena().length() < 8) {
                 errores.add("La contraseña debe tener al menos 8 caracteres.");
             }
-        } else { // MODIFICACIÓN
+        } else {
             if (dto.getContrasena() != null && dto.getContrasena().length() < 8) {
                 errores.add("La contraseña debe tener al menos 8 caracteres.");
             }
-            // Si es null, no se actualiza → se mantiene la actual
         }
 
-        // Rol obligatorio
-        if (dto.getRol() == null || dto.getRol().isBlank())
-            errores.add("El rol es obligatorio.");
+        // El rol ya no se valida, se asigna automáticamente
 
         if (!errores.isEmpty()) {
             throw new RuntimeException(String.join("; ", errores));

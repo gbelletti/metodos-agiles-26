@@ -1,6 +1,3 @@
-//MODIFICACION DE USUARIO
-//Formulario correspondiente para modificacion de usuario
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -9,18 +6,12 @@ import { useRouter, useParams } from "next/navigation";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
 
-const ROLES = [
-  { value: "ADMIN", label: "Administrador" },
-  { value: "OPERADOR", label: "Operador" },
-];
-
 interface FormData {
   nombre: string;
   apellido: string;
   nombreUsuario: string;
   nuevaContrasena: string;
   confirmarContrasena: string;
-  rol: string;
 }
 
 interface FormErrors {
@@ -29,7 +20,6 @@ interface FormErrors {
   nombreUsuario?: string;
   nuevaContrasena?: string;
   confirmarContrasena?: string;
-  rol?: string;
   general?: string;
 }
 
@@ -44,7 +34,6 @@ export default function ModificacionUsuarioPage() {
     nombreUsuario: "",
     nuevaContrasena: "",
     confirmarContrasena: "",
-    rol: "",
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [loadingData, setLoadingData] = useState(true);
@@ -65,10 +54,9 @@ export default function ModificacionUsuarioPage() {
         setForm({
           nombre: data.nombre ?? "",
           apellido: data.apellido ?? "",
-          nombreUsuario: data.nombreUsuario ?? "",  // camelCase desde backend
+          nombreUsuario: data.nombreUsuario ?? "",
           nuevaContrasena: "",
           confirmarContrasena: "",
-          rol: data.rol ?? "",
         });
       })
       .catch((err) => setFetchError(err.message))
@@ -80,7 +68,6 @@ export default function ModificacionUsuarioPage() {
     if (!form.nombre.trim()) e.nombre = "El nombre es obligatorio.";
     if (!form.apellido.trim()) e.apellido = "El apellido es obligatorio.";
     if (!form.nombreUsuario.trim()) e.nombreUsuario = "El nombre de usuario es obligatorio.";
-    if (!form.rol) e.rol = "Seleccioná un rol.";
     if (cambiarContrasena) {
       if (!form.nuevaContrasena) e.nuevaContrasena = "Ingresá la nueva contraseña.";
       else if (form.nuevaContrasena.length < 8) e.nuevaContrasena = "Debe tener al menos 8 caracteres.";
@@ -100,7 +87,6 @@ export default function ModificacionUsuarioPage() {
         nombre: form.nombre,
         apellido: form.apellido,
         nombreUsuario: form.nombreUsuario,
-        rol: form.rol,
       };
       if (cambiarContrasena && form.nuevaContrasena) {
         body.contrasena = form.nuevaContrasena;
@@ -187,7 +173,6 @@ export default function ModificacionUsuarioPage() {
         .page-title { font-size: 1.6rem; font-weight: 600; color: #f1f5f9; letter-spacing: -0.02em; }
         .page-subtitle { font-size: 0.82rem; color: #64748b; margin-top: 0.3rem; font-weight: 300; }
 
-        /* SKELETON */
         .skeleton {
           background: linear-gradient(90deg, #1e2330 25%, #252b3b 50%, #1e2330 75%);
           background-size: 200% 100%;
@@ -252,18 +237,8 @@ export default function ModificacionUsuarioPage() {
         }
         .toggle-pass:hover { color: #94a3b8; }
 
-        .select-wrap { position: relative; }
-        .select-wrap::after {
-          content: ''; position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
-          width: 0; height: 0; border-left: 4px solid transparent;
-          border-right: 4px solid transparent; border-top: 5px solid #475569; pointer-events: none;
-        }
-        select { padding-right: 2rem; cursor: pointer; }
-        select option { background: #111318; }
-
         .field-error { font-size: 0.72rem; color: #f87171; display: flex; align-items: center; gap: 4px; }
 
-        /* TOGGLE CONTRASEÑA */
         .toggle-section {
           display: flex;
           align-items: center;
@@ -332,7 +307,6 @@ export default function ModificacionUsuarioPage() {
         .btn-submit:hover:not(:disabled) { background: #86efac; box-shadow: 0 0 20px #4ade8040; transform: translateY(-1px); }
         .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        /* FETCH ERROR */
         .fetch-error {
           padding: 3rem 2rem; text-align: center;
         }
@@ -361,7 +335,6 @@ export default function ModificacionUsuarioPage() {
           </div>
 
           <div className="form-card">
-            {/* Error al cargar datos */}
             {fetchError && (
               <div className="fetch-error">
                 <p className="fetch-error-title">No se pudo cargar el usuario</p>
@@ -369,7 +342,6 @@ export default function ModificacionUsuarioPage() {
               </div>
             )}
 
-            {/* Skeleton mientras carga */}
             {loadingData && !fetchError && (
               <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                 <div className="skeleton" style={{ height: "12px", width: "30%" }} />
@@ -382,7 +354,6 @@ export default function ModificacionUsuarioPage() {
               </div>
             )}
 
-            {/* Formulario */}
             {!loadingData && !fetchError && (
               <>
                 {errors.general && (
@@ -434,29 +405,11 @@ export default function ModificacionUsuarioPage() {
                       : <span style={{ fontSize: "0.7rem", color: "#334155" }}>Debe ser único en el sistema.</span>
                     }
                   </div>
-
-                  <div className="form-group full">
-                    <label>Rol <span className="required">*</span></label>
-                    <div className="select-wrap">
-                      <select
-                        value={form.rol}
-                        onChange={(e) => handleChange("rol", e.target.value)}
-                        className={errors.rol ? "error-input" : ""}
-                      >
-                        <option value="">Seleccioná un rol...</option>
-                        {ROLES.map(r => (
-                          <option key={r.value} value={r.value}>{r.label}</option>
-                        ))}
-                      </select>
-                    </div>
-                    {errors.rol && <span className="field-error">⚠ {errors.rol}</span>}
-                  </div>
                 </div>
 
                 <hr className="divider" />
                 <p className="form-section-title">Contraseña</p>
 
-                {/* Toggle cambiar contraseña */}
                 <div className="toggle-section" onClick={() => { setCambiarContrasena(!cambiarContrasena); setErrors(e => ({ ...e, nuevaContrasena: undefined, confirmarContrasena: undefined })); }}>
                   <div className={`toggle-switch ${cambiarContrasena ? "on" : ""}`} />
                   <span className="toggle-label">
