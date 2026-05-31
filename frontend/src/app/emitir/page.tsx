@@ -12,8 +12,8 @@ interface Titular {
   fechaNacimiento: string;
   direccion: string;
   grupoSanguineo: string;
-  factorRH: "+" | "-";
-  esDonante: boolean;
+  factorRh: string; // ← era factorRh
+  esDonante: boolean; // ← era esesDonante
   tieneLicenciaB: boolean;
   antiguedadLicenciaB?: number;
 }
@@ -122,7 +122,7 @@ export default function EmitirLicenciaPage() {
     startTransition(async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/titulares/${dni}`,
+          `http://localhost:8080/api/titulares/dni/${dni}`,
         );
         if (!res.ok) {
           setErrorBusqueda("No se encontró ningún titular con ese DNI.");
@@ -223,7 +223,7 @@ export default function EmitirLicenciaPage() {
                   Número de DNI
                 </label>
                 <input
-                  type="number"
+                  type="text"
                   inputMode="numeric"
                   placeholder="Ej: 38500000"
                   value={dni}
@@ -268,10 +268,10 @@ export default function EmitirLicenciaPage() {
                 <Campo label="Dirección" value={titular.direccion} span />
                 <Campo
                   label="Grupo sanguíneo"
-                  value={`${titular.grupoSanguineo} ${titular.factorRH}`}
+                  value={`${titular.grupoSanguineo} ${titular.factorRh}`}
                 />
                 <Campo
-                  label="esDonante de órganos"
+                  label="Donante de órganos"
                   value={titular.esDonante ? "SÍ" : "NO"}
                 />
               </div>
@@ -308,7 +308,7 @@ export default function EmitirLicenciaPage() {
                 {CONFIG_CLASES[claseSeleccionada].edadMin} años
                 {CONFIG_CLASES[claseSeleccionada].profesional && (
                   <span className="ml-2 text-amber-500 font-medium">
-                    · Requiere clase B con ≥1 año
+                    Requiere clase B con ≥1 año
                   </span>
                 )}
               </p>
@@ -329,10 +329,10 @@ export default function EmitirLicenciaPage() {
           </section>
 
           {erroresValidacion.length > 0 && (
-            <div className="bg-red-50 border border-red-200 rounded-xl p-4 space-y-1">
+            <div className="bg-red-300 rounded-xl p-4 space-y-1">
               {erroresValidacion.map((e, i) => (
                 <p key={i} className="text-sm text-red-600">
-                  • {e}
+                  {e}
                 </p>
               ))}
             </div>
@@ -349,7 +349,7 @@ export default function EmitirLicenciaPage() {
               type="button"
               onClick={handleEmitir}
               disabled={isPending || !titular}
-              className="px-5 py-2.5 text-sm font-medium bg-[#0d0f14] text-white rounded-lg hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="px-5 py-2.5 text-sm font-medium bg-[#0d0f14] border border-white hover:border-green-700 text-white rounded-lg hover:bg-green-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               {isPending ? "Emitiendo…" : "Emitir licencia"}
             </button>

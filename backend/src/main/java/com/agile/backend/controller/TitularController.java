@@ -72,4 +72,13 @@ public class TitularController {
             : ResponseEntity.notFound().build();
     }
 
+    @GetMapping("/dni/{numeroDocumento}")
+    public ResponseEntity<TitularResponseDTO> buscarPorDni(@PathVariable String numeroDocumento) {
+        System.out.println("DEBUG - DNI recibido: '" + numeroDocumento + "' | Longitud: " + numeroDocumento.length());
+        
+        return service.buscarPorDni(numeroDocumento)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
+    }
+
 }

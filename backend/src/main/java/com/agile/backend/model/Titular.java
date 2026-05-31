@@ -10,11 +10,11 @@ import lombok.AccessLevel;
 @Entity
 @Table(name = "titulares")
 
-@Getter @Setter  // Genera getters y setters para todos los campos
+@Getter @Setter  
 public class Titular {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Setter(AccessLevel.NONE) // Evita que se modifique el ID una vez asignado
+    @Setter(AccessLevel.NONE)
     private Long id;
     
     private String tipoDocumento;

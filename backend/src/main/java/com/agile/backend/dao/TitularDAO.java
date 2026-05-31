@@ -88,4 +88,8 @@ public class TitularDAO {
         dto.setDonante(t.getDonante());
         return dto;
     }
+
+    public Optional<TitularResponseDTO> buscarPorDni(String numeroDocumento) {
+    return titularRepo.findByNumeroDocumento(numeroDocumento).map(this::toDTO);
+}
 }

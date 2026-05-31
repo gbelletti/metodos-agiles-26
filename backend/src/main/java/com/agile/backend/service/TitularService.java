@@ -41,9 +41,6 @@ public class TitularService {
     private void validarTitular(TitularRequestDTO dto, Long id) {
         List<String> errores = new ArrayList<>();
 
-        if (dto.getTipoDocumento() == null || dto.getTipoDocumento().isBlank())
-            errores.add("El tipo de documento es obligatorio.");
-
         if (dto.getNombre() == null || dto.getNombre().isBlank())
             errores.add("El nombre es obligatorio.");
 
@@ -87,5 +84,10 @@ public class TitularService {
 
         if (!errores.isEmpty())
             throw new RuntimeException(String.join("; ", errores));
+    }
+   
+
+    public Optional<TitularResponseDTO> buscarPorDni(String numeroDocumento) {
+        return dao.buscarPorDni(numeroDocumento);
     }
 }
