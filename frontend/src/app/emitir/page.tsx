@@ -2,7 +2,7 @@
 
 import Form from "next/form";
 import Link from "next/link";
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 
 type ClaseLicencia = "A" | "B" | "C" | "D" | "E" | "F" | "G";
 
@@ -112,13 +112,82 @@ export default function EmitirLicenciaPage() {
   const [errorBusqueda, setErrorBusqueda] = useState("");
   const [exito, setExito] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [costoTotal, setCostoTotal] = useState(0);
+  const [vigencia, setVigencia] = useState(5);
+
+// Función para llamar a tu backend
+const obtenerCosto = async (clase: string, vigencia: number) => {
+    if (!clase || !vigencia) return;
+    try {
+        const respuesta = await fetch(`http://localhost:8080/api/costos/calcular?clase=${clase}&vigenciaAnios=${vigencia}`);
+        if (respuesta.ok) {
+            const total = await respuesta.json();
+            setCostoTotal(total);
+        }
+    } catch (error) {
+        console.error("Error al calcular el costo:", error);
+    }
+};
+
+
+// Este bloque "escucha" los cambios y ejecuta tu función automáticamente
+useEffect(() => {
+    // 1. Verificamos que el administrativo ya haya seleccionado a un titular
+    if (titular) {
+        // Usamos la función que tus compañeros ya crearon para sacar la edad
+        const edad = calcularEdad(titular.fechaNacimiento);
+        let vigenciaCalculada = 5;
+
+        // 2. Aplicamos las reglas de negocio de la Historia N° 2
+        if (edad < 21) {
+            // El enunciado pide "1 año la primera vez y 3 años las siguientes"
+            // Usamos 'tieneLicenciaB' como indicador temporal de si es su primera vez
+            vigenciaCalculada = titular.tieneLicenciaB ? 3 : 1; 
+        } else if (edad <= 46) {
+            vigenciaCalculada = 5;
+        } else if (edad <= 60) {
+            vigenciaCalculada = 4;
+        } else if (edad <= 70) {
+            vigenciaCalculada = 3;
+        } else {
+            // Mayores de 70 años
+            vigenciaCalculada = 1; 
+        }
+
+        // 3. Guardamos la vigencia en el estado que tenías definido
+        setVigencia(vigenciaCalculada);
+
+        // 4. Llamamos a tu backend pasándole la clase y la vigencia REAL del titular
+        obtenerCosto(claseSeleccionada, vigenciaCalculada);
+    } else {
+        // Si no hay titular cargado aún en la pantalla, el costo vuelve a 0
+        setCostoTotal(0);
+    }
+
+// Agregamos "titular" al array para que también recalcule si cambian de persona
+}, [claseSeleccionada, titular]);
+
 
   async function buscarTitular() {
     if (!dni.trim()) return;
     setErrorBusqueda("");
     setTitular(null);
     setErroresValidacion([]);
-
+    /*desactivar estos comentarios para hacer la prueba
+    // Simulamos que la base de datos nos devolvió este titular (para )
+    setTitular({
+        nombre: "Juan",
+        apellido: "Pérez",
+        fechaNacimiento: "2000-05-15", // cambiar la edad para ver los diferentes costos: probar con 2000, 1970, 1960, 1950 y 2008
+        direccion: "Calle Falsa 123",
+        grupoSanguineo: "O",
+        factorRh: "+",
+        esDonante: true,
+        tieneLicenciaB: true,
+        antiguedadLicenciaB: 24
+    });
+    return; // es solamente para probar 
+    */
     startTransition(async () => {
       try {
         const res = await fetch(
@@ -135,7 +204,7 @@ export default function EmitirLicenciaPage() {
       }
     });
   }
-
+  
   async function handleEmitir() {
     if (!titular) return;
 
@@ -345,6 +414,46 @@ export default function EmitirLicenciaPage() {
             >
               Cancelar
             </Link>
+            {/* Desglose de Costos */}
+          <div className="mt-6 p-5 border border-slate-700 rounded-xl bg-slate-800 space-y-3">
+              <h3 className="text-lg font-semibold text-white mb-2">Desglose de Costo</h3>
+
+              {/* Costo Base dinámico */}
+              <div className="flex justify-between items-center">
+                  <label className="text-sm text-slate-300">Costo Base:</label>
+                  <input 
+                      type="text" 
+                      value={`$ ${costoTotal > 0 ? costoTotal - 8 : 0}`} 
+                      readOnly 
+                      disabled 
+                      className="bg-transparent text-right text-white font-medium outline-none cursor-not-allowed"
+                  />
+              </div>
+
+              {/* Gastos Administrativos fijos */}
+              <div className="flex justify-between items-center">
+                  <label className="text-sm text-slate-300">Gastos Administrativos:</label>
+                  <input 
+                      type="text" 
+                      value="$ 8" 
+                      readOnly 
+                      disabled 
+                      className="bg-transparent text-right text-white font-medium outline-none cursor-not-allowed"
+                  />
+              </div>
+
+              {/* Costo Total */}
+              <div className="flex justify-between items-center border-t border-slate-600 pt-3 mt-2">
+                  <label className="text-base text-white font-bold">Costo Total a Abonar:</label>
+                  <input 
+                      type="text" 
+                      value={`$ ${costoTotal}`} 
+                      readOnly 
+                      disabled 
+                      className="bg-transparent text-right text-green-400 font-bold outline-none cursor-not-allowed"
+                  />
+              </div>
+          </div>
             <button
               type="button"
               onClick={handleEmitir}
@@ -376,3 +485,5 @@ function Campo({
     </div>
   );
 }
+
+

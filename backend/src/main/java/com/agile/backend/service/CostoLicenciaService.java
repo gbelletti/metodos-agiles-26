@@ -10,7 +10,6 @@ public class CostoLicenciaService {
 
     private final CostoLicenciaRepository repository;
 
-    // Inyectamos el repositorio que creaste antes
     public CostoLicenciaService(CostoLicenciaRepository repository) {
         this.repository = repository;
     }

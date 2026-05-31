@@ -9,7 +9,6 @@ export default function AdministrarCostosPage() {
     const [nuevoPrecio, setNuevoPrecio] = useState("");
 
     // Función que se ejecuta al presionar "Actualizar"
-    // Función que se ejecuta al presionar "Actualizar"
     const handleActualizar = async (e: React.FormEvent) => {
         e.preventDefault();
         
@@ -33,19 +32,26 @@ export default function AdministrarCostosPage() {
 
     return (
         <div style={{ padding: "3rem", maxWidth: "600px", margin: "0 auto" }}>
-            <h2 style={{ marginBottom: "1rem" }}>Administración de Costos</h2>
+            <h2 style={{ marginBottom: "1rem", color: "white" }}>Administración de Costos</h2>
             <p style={{ marginBottom: "2rem", color: "#a0aec0" }}>
                 Atención: Solo el administrador del sistema puede modificar el precio base de las licencias. Los $8 de gasto administrativo son fijos.
             </p>
 
             <form onSubmit={handleActualizar} style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
                 
-                <label style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                <label style={{ display: "flex", flexDirection: "column", gap: "0.5rem", color: "#e2e8f0" }}>
                     Clase de Licencia:
                     <select 
                         value={clase} 
                         onChange={(e) => setClase(e.target.value)} 
-                        style={{ padding: "0.5rem", color: "black", borderRadius: "5px" }}
+                        style={{ 
+                            padding: "0.5rem", 
+                            color: "white", 
+                            backgroundColor: "#1e293b", /* Solución: Fondo oscuro */
+                            border: "1px solid #334155",
+                            borderRadius: "5px",
+                            outline: "none"
+                        }}
                     >
                         <option value="A">Clase A</option>
                         <option value="B">Clase B</option>
@@ -57,12 +63,19 @@ export default function AdministrarCostosPage() {
                     </select>
                 </label>
 
-                <label style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                <label style={{ display: "flex", flexDirection: "column", gap: "0.5rem", color: "#e2e8f0" }}>
                     Vigencia (Años):
                     <select 
                         value={vigencia} 
                         onChange={(e) => setVigencia(Number(e.target.value))} 
-                        style={{ padding: "0.5rem", color: "black", borderRadius: "5px" }}
+                        style={{ 
+                            padding: "0.5rem", 
+                            color: "white", 
+                            backgroundColor: "#1e293b", /* Solución: Fondo oscuro */
+                            border: "1px solid #334155",
+                            borderRadius: "5px",
+                            outline: "none"
+                        }}
                     >
                         <option value={1}>1 año</option>
                         <option value={3}>3 años</option>
@@ -71,14 +84,21 @@ export default function AdministrarCostosPage() {
                     </select>
                 </label>
 
-                <label style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                <label style={{ display: "flex", flexDirection: "column", gap: "0.5rem", color: "#e2e8f0" }}>
                     Nuevo Precio Base ($):
                     <input
                         type="number"
                         value={nuevoPrecio}
                         onChange={(e) => setNuevoPrecio(e.target.value)}
                         placeholder="Ej: 50"
-                        style={{ padding: "0.5rem", color: "black", borderRadius: "5px" }}
+                        style={{ 
+                            padding: "0.5rem", 
+                            color: "white", 
+                            backgroundColor: "#1e293b", /* Solución: Fondo oscuro */
+                            border: "1px solid #334155",
+                            borderRadius: "5px",
+                            outline: "none"
+                        }}
                         required
                     />
                 </label>
