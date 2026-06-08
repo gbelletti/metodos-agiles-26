@@ -12,8 +12,8 @@ interface Titular {
   fechaNacimiento: string;
   direccion: string;
   grupoSanguineo: string;
-  factorRh: string; // ← era factorRh
-  esDonante: boolean; // ← era esesDonante
+  factorRh: string;
+  esDonante: boolean;
   tieneLicenciaB: boolean;
   antiguedadLicenciaB?: number;
 }
@@ -115,58 +115,46 @@ export default function EmitirLicenciaPage() {
   const [costoTotal, setCostoTotal] = useState(0);
   const [vigencia, setVigencia] = useState(5);
 
-// Función para llamar a tu backend
-const obtenerCosto = async (clase: string, vigencia: number) => {
+  const obtenerCosto = async (clase: string, vigencia: number) => {
     if (!clase || !vigencia) return;
     try {
-        const respuesta = await fetch(`http://localhost:8080/api/costos/calcular?clase=${clase}&vigenciaAnios=${vigencia}`);
-        if (respuesta.ok) {
-            const total = await respuesta.json();
-            setCostoTotal(total);
-        }
+      const respuesta = await fetch(
+        `http://localhost:8080/api/costos/calcular?clase=${clase}&vigenciaAnios=${vigencia}`,
+      );
+      if (respuesta.ok) {
+        const total = await respuesta.json();
+        setCostoTotal(total);
+      }
     } catch (error) {
-        console.error("Error al calcular el costo:", error);
+      console.error("Error al calcular el costo:", error);
     }
-};
+  };
 
-
-// Este bloque "escucha" los cambios y ejecuta tu función automáticamente
-useEffect(() => {
-    // 1. Verificamos que el administrativo ya haya seleccionado a un titular
+  useEffect(() => {
     if (titular) {
-        // Usamos la función que tus compañeros ya crearon para sacar la edad
-        const edad = calcularEdad(titular.fechaNacimiento);
-        let vigenciaCalculada = 5;
+      const edad = calcularEdad(titular.fechaNacimiento);
+      let vigenciaCalculada = 5;
 
-        // 2. Aplicamos las reglas de negocio de la Historia N° 2
-        if (edad < 21) {
-            // El enunciado pide "1 año la primera vez y 3 años las siguientes"
-            // Usamos 'tieneLicenciaB' como indicador temporal de si es su primera vez
-            vigenciaCalculada = titular.tieneLicenciaB ? 3 : 1; 
-        } else if (edad <= 46) {
-            vigenciaCalculada = 5;
-        } else if (edad <= 60) {
-            vigenciaCalculada = 4;
-        } else if (edad <= 70) {
-            vigenciaCalculada = 3;
-        } else {
-            // Mayores de 70 años
-            vigenciaCalculada = 1; 
-        }
+      if (edad < 21) {
+        vigenciaCalculada = titular.tieneLicenciaB ? 3 : 1;
+      } else if (edad <= 46) {
+        vigenciaCalculada = 5;
+      } else if (edad <= 60) {
+        vigenciaCalculada = 4;
+      } else if (edad <= 70) {
+        vigenciaCalculada = 3;
+      } else {
+        // Mayores de 70 años
+        vigenciaCalculada = 1;
+      }
 
-        // 3. Guardamos la vigencia en el estado que tenías definido
-        setVigencia(vigenciaCalculada);
+      setVigencia(vigenciaCalculada);
 
-        // 4. Llamamos a tu backend pasándole la clase y la vigencia REAL del titular
-        obtenerCosto(claseSeleccionada, vigenciaCalculada);
+      obtenerCosto(claseSeleccionada, vigenciaCalculada);
     } else {
-        // Si no hay titular cargado aún en la pantalla, el costo vuelve a 0
-        setCostoTotal(0);
+      setCostoTotal(0);
     }
-
-// Agregamos "titular" al array para que también recalcule si cambian de persona
-}, [claseSeleccionada, titular]);
-
+  }, [claseSeleccionada, titular]);
 
   async function buscarTitular() {
     if (!dni.trim()) return;
@@ -204,7 +192,7 @@ useEffect(() => {
       }
     });
   }
-  
+
   async function handleEmitir() {
     if (!titular) return;
 
@@ -223,7 +211,7 @@ useEffect(() => {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              dni,
+              numeroDocumento: dni,
               clase: claseSeleccionada,
               observaciones,
             }),
@@ -246,21 +234,27 @@ useEffect(() => {
   if (exito) {
     return (
       <main className="min-h-screen bg-[#0d0f14] flex items-center justify-center p-6">
-        <div className="bg-[#0d0f14] rounded-2xl shadow-sm border border-slate-200 p-10 max-w-md w-full text-center space-y-4">
-          <div className="text-5xl">✅</div>
-          <h2 className="text-xl font-semibold text-green-400">
-            Licencia emitida correctamente
+        <div className="bg-[#0d0f14]  p-10 max-w-md w-full text-center space-y-4">
+          <div className="w-18 h-18 mx-auto">
+            <img src="/success.png"></img>
+          </div>
+          <h2 className="text-3xl font-semibold text-green-400">
+            Licencia emitida con éxito
           </h2>
-          <p className="text-slate-100 text-sm">
+          <p className="text-slate-100 text-md">
             Clase{" "}
             <span className="font-bold text-white">{claseSeleccionada}</span>{" "}
             para {titular?.apellido}, {titular?.nombre}
           </p>
-          <Link
-            href="/"
-            className="mt-4 inline-block bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition-colors"
-          >
-            Volver al inicio
+          <Link href="/">
+            <button
+              type="button"
+              onClick={handleEmitir}
+              disabled={isPending || !titular}
+              className="px-5 py-2.5 text-sm font-medium bg-[#0d0f14] border border-white hover:border-green-700 text-white rounded-lg hover:bg-green-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            >
+              Volver al inicio
+            </button>
           </Link>
         </div>
       </main>
@@ -407,6 +401,53 @@ useEffect(() => {
             </div>
           )}
 
+          {/* Desglose de Costos */}
+          <div className="mt-6 p-5 border border-slate-300 rounded-xl bg-[#0d0f14] space-y-2">
+            <h3 className="text-lg font-semibold text-white mb-2">
+              Desglose de costo
+            </h3>
+
+            {/* Costo Base dinámico */}
+            <div className="flex justify-between items-center">
+              <label className="text-sm text-slate-300">Costo Base:</label>
+              <input
+                type="text"
+                value={`$ ${costoTotal > 0 ? costoTotal - 8 : 0}`}
+                readOnly
+                disabled
+                className="bg-transparent text-right text-white font-medium outline-none cursor-not-allowed"
+              />
+            </div>
+
+            {/* Gastos Administrativos fijos */}
+            <div className="flex justify-between items-center">
+              <label className="text-sm text-slate-300">
+                Gastos administrativos:
+              </label>
+              <input
+                type="text"
+                value="$ 8"
+                readOnly
+                disabled
+                className="bg-transparent text-right text-white font-medium outline-none cursor-not-allowed"
+              />
+            </div>
+
+            {/* Costo Total */}
+            <div className="flex justify-between items-center border-t border-slate-600 pt-3 mt-2">
+              <label className="text-base text-white font-bold">
+                Costo total a abonar:
+              </label>
+              <input
+                type="text"
+                value={`$ ${costoTotal}`}
+                readOnly
+                disabled
+                className="bg-transparent text-right text-green-400 font-bold outline-none cursor-not-allowed"
+              />
+            </div>
+          </div>
+
           <div className="flex justify-end gap-3 pb-6">
             <Link
               href="/"
@@ -414,46 +455,7 @@ useEffect(() => {
             >
               Cancelar
             </Link>
-            {/* Desglose de Costos */}
-          <div className="mt-6 p-5 border border-slate-700 rounded-xl bg-slate-800 space-y-3">
-              <h3 className="text-lg font-semibold text-white mb-2">Desglose de Costo</h3>
 
-              {/* Costo Base dinámico */}
-              <div className="flex justify-between items-center">
-                  <label className="text-sm text-slate-300">Costo Base:</label>
-                  <input 
-                      type="text" 
-                      value={`$ ${costoTotal > 0 ? costoTotal - 8 : 0}`} 
-                      readOnly 
-                      disabled 
-                      className="bg-transparent text-right text-white font-medium outline-none cursor-not-allowed"
-                  />
-              </div>
-
-              {/* Gastos Administrativos fijos */}
-              <div className="flex justify-between items-center">
-                  <label className="text-sm text-slate-300">Gastos Administrativos:</label>
-                  <input 
-                      type="text" 
-                      value="$ 8" 
-                      readOnly 
-                      disabled 
-                      className="bg-transparent text-right text-white font-medium outline-none cursor-not-allowed"
-                  />
-              </div>
-
-              {/* Costo Total */}
-              <div className="flex justify-between items-center border-t border-slate-600 pt-3 mt-2">
-                  <label className="text-base text-white font-bold">Costo Total a Abonar:</label>
-                  <input 
-                      type="text" 
-                      value={`$ ${costoTotal}`} 
-                      readOnly 
-                      disabled 
-                      className="bg-transparent text-right text-green-400 font-bold outline-none cursor-not-allowed"
-                  />
-              </div>
-          </div>
             <button
               type="button"
               onClick={handleEmitir}
@@ -485,5 +487,3 @@ function Campo({
     </div>
   );
 }
-
-
