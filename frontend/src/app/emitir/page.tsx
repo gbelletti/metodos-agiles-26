@@ -3,6 +3,7 @@
 import Form from "next/form";
 import Link from "next/link";
 import { useState, useTransition, useEffect } from "react";
+import { imprimirLicencia, imprimirComprobante, LicenciaImpresionDTO, ComprobantePagoDTO } from './impresionService';
 
 type ClaseLicencia = "A" | "B" | "C" | "D" | "E" | "F" | "G";
 
@@ -114,6 +115,8 @@ export default function EmitirLicenciaPage() {
   const [isPending, startTransition] = useTransition();
   const [costoTotal, setCostoTotal] = useState(0);
   const [vigencia, setVigencia] = useState(5);
+  const [numeroLicenciaEmitida, setNumeroLicenciaEmitida] = useState<number>(0);
+  const [numeroTramiteEmitido, setNumeroTramiteEmitido] = useState<number>(0);
 
   const obtenerCosto = async (clase: string, vigencia: number) => {
     if (!clase || !vigencia) return;
@@ -230,13 +233,57 @@ export default function EmitirLicenciaPage() {
       }
     });
   }
+  const handleClicImprimirLicencia = async () => {
+    if (!titular) return;
+
+    // Calculamos la fecha de vencimiento sumando la vigencia al año actual
+    const fechaActual = new Date();
+    const fechaVenc = new Date();
+    fechaVenc.setFullYear(fechaActual.getFullYear() + vigencia);
+
+    const datosLicencia: LicenciaImpresionDTO = {
+      numeroLicencia: numeroLicenciaEmitida,
+      nombre: titular.nombre,
+      apellido: titular.apellido,
+      tipoDocumento: "DNI",
+      numeroDocumento: dni,
+      fechaNacimiento: titular.fechaNacimiento,
+      clasesHabilitadas: claseSeleccionada,
+      fechaEmision: fechaActual.toISOString().split('T')[0],
+      fechaVencimiento: fechaVenc.toISOString().split('T')[0],
+      grupoSanguineo: titular.grupoSanguineo,
+      factorRh: titular.factorRh,
+      donanteOrganos: titular.esDonante,
+      observaciones: observaciones || "Ninguna",
+    };
+
+    const usuarioLogueado = "Administrativo_Prueba"; // Más adelante vendrá del Login
+    await imprimirLicencia(datosLicencia, usuarioLogueado);
+  };
+
+  const handleClicImprimirComprobante = async () => {
+    if (!titular) return;
+
+    const datosComprobante: ComprobantePagoDTO = {
+      numeroTramite: numeroTramiteEmitido, // N° temporal generado al azar
+      nombre: titular.nombre,
+      apellido: titular.apellido,
+      clase: claseSeleccionada,
+      costoLicencia: costoTotal - 8, // Se restan los gastos administrativos al costo base [1, 2]
+      costoAdministrativo: 8,
+      totalAbonar: costoTotal,
+    };
+
+    const usuarioLogueado = "Administrativo_Prueba";
+    await imprimirComprobante(datosComprobante, usuarioLogueado);
+  };
 
   if (exito) {
     return (
       <main className="min-h-screen bg-[#0d0f14] flex items-center justify-center p-6">
-        <div className="bg-[#0d0f14]  p-10 max-w-md w-full text-center space-y-4">
+        <div className="bg-[#0d0f14] p-10 max-w-md w-full text-center space-y-4">
           <div className="w-18 h-18 mx-auto">
-            <img src="/success.png"></img>
+            <img src="/success.png" alt="Éxito"></img>
           </div>
           <h2 className="text-3xl font-semibold text-green-400">
             Licencia emitida con éxito
@@ -246,16 +293,32 @@ export default function EmitirLicenciaPage() {
             <span className="font-bold text-white">{claseSeleccionada}</span>{" "}
             para {titular?.apellido}, {titular?.nombre}
           </p>
-          <Link href="/">
+
+          {}
+          <div className="flex flex-col gap-3 mt-6">
             <button
-              type="button"
-              onClick={handleEmitir}
-              disabled={isPending || !titular}
-              className="px-5 py-2.5 text-sm font-medium bg-[#0d0f14] border border-white hover:border-green-700 text-white rounded-lg hover:bg-green-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              onClick={handleClicImprimirLicencia}
+              className="w-full px-5 py-2.5 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
-              Volver al inicio
+              Imprimir Carnet de Licencia
             </button>
-          </Link>
+            
+            <button
+              onClick={handleClicImprimirComprobante}
+              className="w-full px-5 py-2.5 text-sm font-medium bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Imprimir Comprobante de Pago
+            </button>
+
+            <Link href="/">
+              <button
+                type="button"
+                className="w-full px-5 py-2.5 text-sm font-medium bg-[#0d0f14] border border-white hover:border-green-700 text-white rounded-lg hover:bg-green-700 transition-colors mt-2"
+              >
+                Volver al inicio
+              </button>
+            </Link>
+          </div>
         </div>
       </main>
     );
