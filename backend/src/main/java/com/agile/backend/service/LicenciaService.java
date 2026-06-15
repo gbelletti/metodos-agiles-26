@@ -91,4 +91,13 @@ public class LicenciaService {
         dto.setObservaciones(l.getObservaciones());
         return dto;
     }
+        /**
+         * Lista licencias vigentes (no vencidas) aplicando filtros opcionales.
+         * Todos los parámetros pueden ser nulos para ignorar el filtro.
+         */
+        public List<LicenciaResponseDTO> listarVigentesPorCriterios(
+                String nombre, String apellido, String grupoSanguineo, String factorRh, Boolean donante) {
+        return licenciaRepository.findVigentesByCriterios(nombre, apellido, grupoSanguineo, factorRh, donante)
+                .stream().map(this::toDTO).collect(Collectors.toList());
+        }
 }

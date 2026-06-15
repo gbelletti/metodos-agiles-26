@@ -39,4 +39,17 @@ public class LicenciaController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+    /**
+     * GET /api/licencias/vigentes?nombre=...&apellido=...&grupoSanguineo=...&factorRh=...&donante=...
+     * Lista licencias vigentes con filtros opcionales.
+     */
+    @GetMapping("/vigentes")
+        public ResponseEntity<List<LicenciaResponseDTO>> listarVigentes(
+        @RequestParam(required = false) String nombre,
+        @RequestParam(required = false) String apellido,
+        @RequestParam(required = false) String grupoSanguineo,
+        @RequestParam(required = false) String factorRh,
+        @RequestParam(required = false) Boolean donante) {
+            return ResponseEntity.ok(service.listarVigentesPorCriterios(nombre, apellido, grupoSanguineo, factorRh, donante));
+        }
 }

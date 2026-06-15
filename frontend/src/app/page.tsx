@@ -244,8 +244,8 @@ export default function HomePage() {
               <span className="badge">Próximamente</span>
             </div>
 
-            {/* 6. Listado de licencias vigentes por criterios (próximamente) */}
-            <div className="menu-card disabled">
+            {/* 6. Listado de licencias vigentes por criterios */}
+            <Link href="/licencias-vigentes" className="menu-card">
               <div className="menu-card-icon">
                 <svg viewBox="0 0 24 24">
                   <path
@@ -255,15 +255,11 @@ export default function HomePage() {
                   />
                 </svg>
               </div>
-              <div className="menu-card-title">
-                Licencias vigentes por criterios
-              </div>
+              <div className="menu-card-title">Licencias vigentes por criterios</div>
               <div className="menu-card-desc">
-                Filtrar licencias activas según tipo, persona u otros
-                parámetros.
+                Filtrar licencias activas según tipo, persona u otros parámetros.
               </div>
-              <span className="badge">Próximamente</span>
-            </div>
+            </Link>
 
             {/* Calcular vigencia (FUNCIONAL) */}
             <Link href="/vigencia" className="menu-card">
