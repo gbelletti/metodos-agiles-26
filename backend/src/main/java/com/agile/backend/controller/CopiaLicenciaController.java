@@ -19,7 +19,7 @@ public class CopiaLicenciaController {
         this.service = service;
     }
 
-    // POST /api/copias → emitir una copia de licencia
+    // POST /api/copias -> emitir una copia de licencia
     @PostMapping
     public ResponseEntity<?> emitirCopia(@RequestBody CopiaLicenciaRequestDTO dto) {
         try {
@@ -30,7 +30,7 @@ public class CopiaLicenciaController {
         }
     }
 
-    // GET /api/copias/licencia/{licenciaId} → historial de copias de una licencia
+    // GET /api/copias/licencia/{licenciaId} -> historial de copias de una licencia
     @GetMapping("/licencia/{licenciaId}")
     public ResponseEntity<?> listarCopias(@PathVariable Long licenciaId) {
         try {

@@ -6,12 +6,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/costos")
-@CrossOrigin(origins = "http://localhost:3000") // Permite que tu frontend en Next.js se conecte sin errores
+@CrossOrigin(origins = {"http://localhost:3000", "http://192.168.100.21:3000"})
 public class CostoLicenciaController {
 
     private final CostoLicenciaService service;
-
-    // Inyectamos el servicio que creaste en el paso anterior
     public CostoLicenciaController(CostoLicenciaService service) {
         this.service = service;
     }

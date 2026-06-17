@@ -66,14 +66,19 @@ export default function AltaTitularPage() {
 
   function validar(): FormErrors {
     const e: FormErrors = {};
-    if (!form.tipoDocumento) e.tipoDocumento = "El tipo de documento es obligatorio.";
-    if (!form.numeroDocumento.trim()) e.numeroDocumento = "El número de documento es obligatorio.";
+    if (!form.tipoDocumento)
+      e.tipoDocumento = "El tipo de documento es obligatorio.";
+    if (!form.numeroDocumento.trim())
+      e.numeroDocumento = "El número de documento es obligatorio.";
     if (!form.apellido.trim()) e.apellido = "El apellido es obligatorio.";
     if (!form.nombre.trim()) e.nombre = "El nombre es obligatorio.";
-    if (!form.fechaNacimiento) e.fechaNacimiento = "La fecha de nacimiento es obligatoria.";
+    if (!form.fechaNacimiento)
+      e.fechaNacimiento = "La fecha de nacimiento es obligatoria.";
     if (!form.direccion.trim()) e.direccion = "La dirección es obligatoria.";
-    if (!form.claseSolicitada) e.claseSolicitada = "La clase solicitada es obligatoria.";
-    if (!form.grupoSanguineo) e.grupoSanguineo = "El grupo sanguíneo es obligatorio.";
+    if (!form.claseSolicitada)
+      e.claseSolicitada = "La clase solicitada es obligatoria.";
+    if (!form.grupoSanguineo)
+      e.grupoSanguineo = "El grupo sanguíneo es obligatorio.";
     if (!form.factorRH) e.factorRH = "El factor RH es obligatorio.";
     if (!form.donante) e.donante = "Este campo es obligatorio.";
     return e;
@@ -81,7 +86,10 @@ export default function AltaTitularPage() {
 
   async function handleSubmit() {
     const e = validar();
-    if (Object.keys(e).length > 0) { setErrors(e); return; }
+    if (Object.keys(e).length > 0) {
+      setErrors(e);
+      return;
+    }
     setErrors({});
     setLoading(true);
     try {
@@ -102,7 +110,10 @@ export default function AltaTitularPage() {
         }),
       });
       if (res.status === 409) {
-        setErrors({ numeroDocumento: "Ya existe un titular con ese tipo y número de documento." });
+        setErrors({
+          numeroDocumento:
+            "Ya existe un titular con ese tipo y número de documento.",
+        });
         return;
       }
       if (!res.ok) {
@@ -112,7 +123,9 @@ export default function AltaTitularPage() {
       setExitoso(true);
       setTimeout(() => router.push("/titulares"), 2000);
     } catch (err: unknown) {
-      setErrors({ general: err instanceof Error ? err.message : "Error inesperado." });
+      setErrors({
+        general: err instanceof Error ? err.message : "Error inesperado.",
+      });
     } finally {
       setLoading(false);
     }
@@ -191,7 +204,6 @@ export default function AltaTitularPage() {
 
       <div className="shell">
         <main className="main">
-
           {/* Breadcrumb */}
           <nav className="breadcrumb">
             <Link href="/titulares">Titulares</Link>
@@ -210,11 +222,21 @@ export default function AltaTitularPage() {
 
           {/* Form */}
           <div className="form-card">
-
             {errors.general && (
               <div className="alert-error">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
+                  />
                 </svg>
                 {errors.general}
               </div>
@@ -222,8 +244,19 @@ export default function AltaTitularPage() {
 
             {exitoso && (
               <div className="alert-success">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                  />
                 </svg>
                 ¡Titular dado de alta correctamente! Redirigiendo...
               </div>
@@ -232,32 +265,50 @@ export default function AltaTitularPage() {
             {/* Sección: Documento */}
             <p className="form-section-title">Documento</p>
             <div className="form-grid">
-
               <div className="form-group">
-                <label>Tipo de documento <span className="required">*</span></label>
+                <label>
+                  Tipo de documento <span className="required">*</span>
+                </label>
                 <div className="select-wrap">
-                  <select value={form.tipoDocumento} onChange={(e) => handleChange("tipoDocumento", e.target.value)} className={errors.tipoDocumento ? "error-input" : ""}>
+                  <select
+                    value={form.tipoDocumento}
+                    onChange={(e) =>
+                      handleChange("tipoDocumento", e.target.value)
+                    }
+                    className={errors.tipoDocumento ? "error-input" : ""}
+                  >
                     <option value="">Seleccioná...</option>
-                    {TIPOS_DOCUMENTO.map(t => (
-                      <option key={t.value} value={t.value}>{t.label}</option>
+                    {TIPOS_DOCUMENTO.map((t) => (
+                      <option key={t.value} value={t.value}>
+                        {t.label}
+                      </option>
                     ))}
                   </select>
                 </div>
-                {errors.tipoDocumento && <span className="field-error">⚠ {errors.tipoDocumento}</span>}
+                {errors.tipoDocumento && (
+                  <span className="field-error">⚠ {errors.tipoDocumento}</span>
+                )}
               </div>
 
               <div className="form-group">
-                <label>Número de documento <span className="required">*</span></label>
+                <label>
+                  Número de documento <span className="required">*</span>
+                </label>
                 <input
                   type="text"
                   placeholder="Ej: 12345678"
                   value={form.numeroDocumento}
-                  onChange={(e) => handleChange("numeroDocumento", e.target.value)}
+                  onChange={(e) =>
+                    handleChange("numeroDocumento", e.target.value)
+                  }
                   className={errors.numeroDocumento ? "error-input" : ""}
                 />
-                {errors.numeroDocumento && <span className="field-error">⚠ {errors.numeroDocumento}</span>}
+                {errors.numeroDocumento && (
+                  <span className="field-error">
+                    ⚠ {errors.numeroDocumento}
+                  </span>
+                )}
               </div>
-
             </div>
 
             <hr className="divider" />
@@ -265,9 +316,10 @@ export default function AltaTitularPage() {
             {/* Sección: Datos personales */}
             <p className="form-section-title">Datos personales</p>
             <div className="form-grid">
-
               <div className="form-group">
-                <label>Apellido <span className="required">*</span></label>
+                <label>
+                  Apellido <span className="required">*</span>
+                </label>
                 <input
                   type="text"
                   placeholder="Ej: García"
@@ -275,11 +327,15 @@ export default function AltaTitularPage() {
                   onChange={(e) => handleChange("apellido", e.target.value)}
                   className={errors.apellido ? "error-input" : ""}
                 />
-                {errors.apellido && <span className="field-error">⚠ {errors.apellido}</span>}
+                {errors.apellido && (
+                  <span className="field-error">⚠ {errors.apellido}</span>
+                )}
               </div>
 
               <div className="form-group">
-                <label>Nombre <span className="required">*</span></label>
+                <label>
+                  Nombre <span className="required">*</span>
+                </label>
                 <input
                   type="text"
                   placeholder="Ej: Juan"
@@ -287,22 +343,34 @@ export default function AltaTitularPage() {
                   onChange={(e) => handleChange("nombre", e.target.value)}
                   className={errors.nombre ? "error-input" : ""}
                 />
-                {errors.nombre && <span className="field-error">⚠ {errors.nombre}</span>}
+                {errors.nombre && (
+                  <span className="field-error">⚠ {errors.nombre}</span>
+                )}
               </div>
 
               <div className="form-group">
-                <label>Fecha de nacimiento <span className="required">*</span></label>
+                <label>
+                  Fecha de nacimiento <span className="required">*</span>
+                </label>
                 <input
                   type="date"
                   value={form.fechaNacimiento}
-                  onChange={(e) => handleChange("fechaNacimiento", e.target.value)}
+                  onChange={(e) =>
+                    handleChange("fechaNacimiento", e.target.value)
+                  }
                   className={errors.fechaNacimiento ? "error-input" : ""}
                 />
-                {errors.fechaNacimiento && <span className="field-error">⚠ {errors.fechaNacimiento}</span>}
+                {errors.fechaNacimiento && (
+                  <span className="field-error">
+                    ⚠ {errors.fechaNacimiento}
+                  </span>
+                )}
               </div>
 
               <div className="form-group">
-                <label>Dirección <span className="required">*</span></label>
+                <label>
+                  Dirección <span className="required">*</span>
+                </label>
                 <input
                   type="text"
                   placeholder="Ej: Av. Siempreviva 742"
@@ -310,9 +378,10 @@ export default function AltaTitularPage() {
                   onChange={(e) => handleChange("direccion", e.target.value)}
                   className={errors.direccion ? "error-input" : ""}
                 />
-                {errors.direccion && <span className="field-error">⚠ {errors.direccion}</span>}
+                {errors.direccion && (
+                  <span className="field-error">⚠ {errors.direccion}</span>
+                )}
               </div>
-
             </div>
 
             <hr className="divider" />
@@ -320,70 +389,149 @@ export default function AltaTitularPage() {
             {/* Sección: Datos médicos y licencia */}
             <p className="form-section-title">Licencia y datos médicos</p>
             <div className="form-grid">
-
               <div className="form-group">
-                <label>Clase solicitada <span className="required">*</span></label>
+                <label>
+                  Clase solicitada <span className="required">*</span>
+                </label>
                 <div className="select-wrap">
-                  <select value={form.claseSolicitada} onChange={(e) => handleChange("claseSolicitada", e.target.value)} className={errors.claseSolicitada ? "error-input" : ""}>
+                  <select
+                    value={form.claseSolicitada}
+                    onChange={(e) =>
+                      handleChange("claseSolicitada", e.target.value)
+                    }
+                    className={errors.claseSolicitada ? "error-input" : ""}
+                  >
                     <option value="">Seleccioná...</option>
-                    {CLASES.map(c => (
-                      <option key={c} value={c}>Clase {c}</option>
+                    {CLASES.map((c) => (
+                      <option key={c} value={c}>
+                        Clase {c}
+                      </option>
                     ))}
                   </select>
                 </div>
-                {errors.claseSolicitada && <span className="field-error">⚠ {errors.claseSolicitada}</span>}
+                {errors.claseSolicitada && (
+                  <span className="field-error">
+                    ⚠ {errors.claseSolicitada}
+                  </span>
+                )}
               </div>
 
               <div className="form-group">
-                <label>Grupo sanguíneo <span className="required">*</span></label>
+                <label>
+                  Grupo sanguíneo <span className="required">*</span>
+                </label>
                 <div className="select-wrap">
-                  <select value={form.grupoSanguineo} onChange={(e) => handleChange("grupoSanguineo", e.target.value)} className={errors.grupoSanguineo ? "error-input" : ""}>
+                  <select
+                    value={form.grupoSanguineo}
+                    onChange={(e) =>
+                      handleChange("grupoSanguineo", e.target.value)
+                    }
+                    className={errors.grupoSanguineo ? "error-input" : ""}
+                  >
                     <option value="">Seleccioná...</option>
-                    {GRUPOS_SANGUINEOS.map(g => (
-                      <option key={g} value={g}>{g}</option>
+                    {GRUPOS_SANGUINEOS.map((g) => (
+                      <option key={g} value={g}>
+                        {g}
+                      </option>
                     ))}
                   </select>
                 </div>
-                {errors.grupoSanguineo && <span className="field-error">⚠ {errors.grupoSanguineo}</span>}
+                {errors.grupoSanguineo && (
+                  <span className="field-error">⚠ {errors.grupoSanguineo}</span>
+                )}
               </div>
 
               <div className="form-group">
-                <label>Factor RH <span className="required">*</span></label>
+                <label>
+                  Factor RH <span className="required">*</span>
+                </label>
                 <div className="select-wrap">
-                  <select value={form.factorRH} onChange={(e) => handleChange("factorRH", e.target.value)} className={errors.factorRH ? "error-input" : ""}>
+                  <select
+                    value={form.factorRH}
+                    onChange={(e) => handleChange("factorRH", e.target.value)}
+                    className={errors.factorRH ? "error-input" : ""}
+                  >
                     <option value="">Seleccioná...</option>
                     <option value="true">Positivo (+)</option>
                     <option value="false">Negativo (-)</option>
                   </select>
                 </div>
-                {errors.factorRH && <span className="field-error">⚠ {errors.factorRH}</span>}
+                {errors.factorRH && (
+                  <span className="field-error">⚠ {errors.factorRH}</span>
+                )}
               </div>
 
               <div className="form-group">
-                <label>Donante de órganos <span className="required">*</span></label>
+                <label>
+                  Donante de órganos <span className="required">*</span>
+                </label>
                 <div className="select-wrap">
-                  <select value={form.donante} onChange={(e) => handleChange("donante", e.target.value)} className={errors.donante ? "error-input" : ""}>
+                  <select
+                    value={form.donante}
+                    onChange={(e) => handleChange("donante", e.target.value)}
+                    className={errors.donante ? "error-input" : ""}
+                  >
                     <option value="">Seleccioná...</option>
                     <option value="true">Sí</option>
                     <option value="false">No</option>
                   </select>
                 </div>
-                {errors.donante && <span className="field-error">⚠ {errors.donante}</span>}
+                {errors.donante && (
+                  <span className="field-error">⚠ {errors.donante}</span>
+                )}
               </div>
-
             </div>
 
             {/* Actions */}
             <div className="form-actions">
-              <Link href="/titulares" className="btn-cancel">Cancelar</Link>
-              <button className="btn-submit" onClick={handleSubmit} disabled={loading || exitoso}>
-                {loading
-                  ? <><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} style={{ animation: "spin 1s linear infinite" }}><path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" /></svg> Guardando...</>
-                  : <><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg> Dar de alta</>
-                }
+              <Link href="/titulares" className="btn-cancel">
+                Cancelar
+              </Link>
+              <button
+                className="btn-submit"
+                onClick={handleSubmit}
+                disabled={loading || exitoso}
+              >
+                {loading ? (
+                  <>
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      style={{ animation: "spin 1s linear infinite" }}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+                      />
+                    </svg>{" "}
+                    Guardando...
+                  </>
+                ) : (
+                  <>
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2.5}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 4v16m8-8H4"
+                      />
+                    </svg>{" "}
+                    Dar de alta
+                  </>
+                )}
               </button>
             </div>
-
           </div>
         </main>
       </div>
