@@ -52,4 +52,15 @@ public class LicenciaController {
         @RequestParam(required = false) Boolean donante) {
             return ResponseEntity.ok(service.listarVigentesPorCriterios(nombre, apellido, grupoSanguineo, factorRh, donante));
         }
+
+    // GET /api/licencias/vencidas?nombre=...&apellido=...&grupoSanguineo=...&factorRh=...&donante=...
+    @GetMapping("/vencidas")
+    public ResponseEntity<List<LicenciaResponseDTO>> listarVencidas(
+        @RequestParam(required = false) String nombre,
+        @RequestParam(required = false) String apellido,
+        @RequestParam(required = false) String grupoSanguineo,
+        @RequestParam(required = false) String factorRh,
+        @RequestParam(required = false) Boolean donante) {
+            return ResponseEntity.ok(service.listarVencidasPorCriterios(nombre, apellido, grupoSanguineo, factorRh, donante));
+    }
 }

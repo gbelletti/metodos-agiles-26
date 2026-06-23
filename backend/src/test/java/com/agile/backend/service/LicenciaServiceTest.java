@@ -18,6 +18,16 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
+import com.agile.backend.dto.LicenciaRequestDTO;
+import org.junit.jupiter.api.BeforeEach;
+
+import java.util.Collections;
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 class LicenciaServiceTest {
 
@@ -103,4 +113,69 @@ class LicenciaServiceTest {
         List<LicenciaResponseDTO> resultado = licenciaService.listarVigentesPorCriterios("Nadie", null, null, null, null);
         assertTrue(resultado.isEmpty());
     }
+
+    private LicenciaRequestDTO requestDTO;
+    private Titular titularMock;
+
+    @BeforeEach
+    void setUp() {
+        requestDTO = new LicenciaRequestDTO();
+        requestDTO.setNumeroDocumento("12345678");
+        requestDTO.setClase("B");
+        requestDTO.setObservaciones("Uso de lentes");
+
+        titularMock = new Titular();
+        titularMock.setId(1L);
+        titularMock.setNumeroDocumento("12345678");
+        titularMock.setNombre("Juan");
+        titularMock.setApellido("Perez");
+        titularMock.setFechaNacimiento(LocalDate.of(1990, 1, 1));
+    }
+
+    @Test
+    void emitirLicencia_Exitosa() {
+        // configurar el escenario de emision exitosa
+        when(titularRepository.findByNumeroDocumento("12345678")).thenReturn(Optional.of(titularMock));
+        when(licenciaRepository.findByTitularId(1L)).thenReturn(Collections.emptyList()); // Es primera licencia
+
+        LocalDate fechaEmision = LocalDate.now();
+        LocalDate fechaVencimiento = LocalDate.now().plusYears(5);
+        when(vigenciaService.calcularFechaInicio()).thenReturn(fechaEmision);
+        when(vigenciaService.calcularFechaVencimiento(any(), eq(true))).thenReturn(fechaVencimiento);
+        when(vigenciaService.calcularAniosVigencia(any(), eq(true))).thenReturn(5);
+        when(costoLicenciaService.calcularCosto("B", 5)).thenReturn(48);
+
+        Licencia licenciaGuardada = new Licencia();
+        licenciaGuardada.setTitular(titularMock);
+        licenciaGuardada.setClase("B");
+        licenciaGuardada.setFechaEmision(fechaEmision);
+        licenciaGuardada.setFechaVencimiento(fechaVencimiento);
+        licenciaGuardada.setCostoTotal(48);
+        licenciaGuardada.setObservaciones("Uso de lentes");
+
+        when(licenciaRepository.save(any(Licencia.class))).thenReturn(licenciaGuardada);
+
+        LicenciaResponseDTO response = licenciaService.emitirLicencia(requestDTO);
+
+        assertNotNull(response);
+        assertEquals(100L, response.getId());
+        assertEquals(48, response.getCostoTotal());
+        assertEquals("B", response.getClase());
+        verify(licenciaRepository, times(1)).save(any(Licencia.class));
+    }
+
+    @Test
+    void emitirLicencia_FalloPorTitularNoEncontrado() {
+        // titular no esta registrado en el sistema
+        when(titularRepository.findByNumeroDocumento(anyString())).thenReturn(Optional.empty());
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            licenciaService.emitirLicencia(requestDTO);
+        });
+
+        assertTrue(exception.getMessage().contains("No se encontró un titular con DNI: 12345678"));
+        verify(licenciaRepository, never()).save(any(Licencia.class));
+        verify(vigenciaService, never()).calcularAniosVigencia(any(), anyBoolean());
+    }
+
 }

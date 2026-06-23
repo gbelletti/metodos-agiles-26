@@ -100,4 +100,9 @@ public class LicenciaService {
         return licenciaRepository.findVigentesByCriterios(nombre, apellido, grupoSanguineo, factorRh, donante)
                 .stream().map(this::toDTO).collect(Collectors.toList());
         }
+
+        public List<LicenciaResponseDTO> listarVencidasPorCriterios(
+        String nombre, String apellido, String grupoSanguineo, String factorRh, Boolean donante) {
+        return licenciaRepository.findVencidasByCriterios(nombre, apellido, grupoSanguineo, factorRh, donante).stream().map(this::toDTO).collect(Collectors.toList());
+}
 }
