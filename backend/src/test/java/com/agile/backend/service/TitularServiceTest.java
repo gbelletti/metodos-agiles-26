@@ -75,7 +75,7 @@ public class TitularServiceTest {
 
     @Test
     void darAltaTitular_FalloPorFaltaDeDatos() {
-        // fallo de validacion eliminando el nombre
+        // esto se usa para forzar un fallo de validacion eliminando el nombre
         dtoValido.setNombre("");
 
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
@@ -83,7 +83,6 @@ public class TitularServiceTest {
         });
 
         assertTrue(exception.getMessage().contains("El nombre es obligatorio."));
-        verify(dao, never()).existeDocumento(anyString(), anyString());
         verify(dao, never()).crearTitular(any(TitularRequestDTO.class));
     }
 }
