@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
 
 interface LicenciaVigente {
   id: number;
@@ -54,7 +54,7 @@ export default function LicenciasVigentesPage() {
     if (donante) params.append("donante", donante);
 
     try {
-      const res = await fetch(`${API_URL}/api/licencias/vigentes?${params}`);
+      const res = await fetch(`${API_URL}/licencias/vigentes?${params}`);
       if (!res.ok) throw new Error(`Error ${res.status}`);
       const data: LicenciaVigente[] = await res.json();
       setResultados(data);

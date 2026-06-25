@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
 
 interface FormData {
   nombre: string;
@@ -58,7 +58,7 @@ export default function AltaUsuarioPage() {
     setErrors({});
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/api/usuarios`, {
+      const res = await fetch(`${API_URL}/usuarios`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

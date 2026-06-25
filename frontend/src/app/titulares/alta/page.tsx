@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
 
 const TIPOS_DOCUMENTO = [
   { value: "DNI", label: "DNI" },
@@ -93,7 +93,7 @@ export default function AltaTitularPage() {
     setErrors({});
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/api/titulares`, {
+      const res = await fetch(`${API_URL}/titulares`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -3,6 +3,8 @@
 import { useState, useCallback, useTransition } from "react";
 import Link from "next/link";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
+
 // ── Tipos ──────────────────────────────────────────────────────────────────────
 interface LicenciaVencida {
   id: number;
@@ -73,7 +75,7 @@ export default function LicenciasExpiradas() {
         if (filtros.donante) params.append("donante", filtros.donante);
 
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/licencias/vencidas?${params.toString()}`,
+          `${API_URL}/licencias/vencidas?${params.toString()}`,
         );
         if (!res.ok) throw new Error();
         setResultados(await res.json());

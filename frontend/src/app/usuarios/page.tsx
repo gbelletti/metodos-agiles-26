@@ -28,7 +28,7 @@ const ROL_STYLES: Record<string, string> = {
   OPERADOR: "badge badge-operador",
 };
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
 
 function formatFecha(iso: string): string {
   const d = new Date(iso);
@@ -53,7 +53,7 @@ export default function UsuariosPage() {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`${API_URL}/api/usuarios`, { cache: "no-store" });
+        const res = await fetch(`${API_URL}/usuarios`, { cache: "no-store" });
         if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
         const data: UsuarioAPI[] = await res.json();
         if (!cancelled) setUsuarios(data);

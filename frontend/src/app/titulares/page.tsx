@@ -17,7 +17,7 @@ interface TitularAPI {
   donante: boolean;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
 
 function formatFecha(iso: string): string {
   const d = new Date(iso + "T00:00:00"); // evita desfase de zona horaria
@@ -37,7 +37,7 @@ export default function TitularesPage() {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`${API_URL}/api/titulares`, { cache: "no-store" });
+        const res = await fetch(`${API_URL}/titulares`, { cache: "no-store" });
         if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
         const data: TitularAPI[] = await res.json();
         if (!cancelled) setTitulares(data);
@@ -55,7 +55,7 @@ export default function TitularesPage() {
   async function handleEliminar(id: number, nombre: string, apellido: string) {
     if (!confirm(`¿Seguro que querés eliminar a ${nombre} ${apellido}? Esta acción no se puede deshacer.`)) return;
     try {
-      const res = await fetch(`${API_URL}/api/titulares/${id}`, { method: "DELETE" });
+      const res = await fetch(`${API_URL}/titulares/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error(`Error ${res.status}`);
       cargarTitulares();
     } catch (err) {

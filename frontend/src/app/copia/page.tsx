@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useState, useTransition } from "react";
 import { useAuth } from "@/context/AuthContext";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
+
 // ─── Tipos ──────────────────────────────────────────────────────────────────
 
 interface Licencia {
@@ -58,7 +60,7 @@ export default function EmitirCopiaPage() {
     startTransition(async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/licencias/titular/${dni}`
+          `${API_URL}/licencias/titular/${dni}`
         );
         if (!res.ok) {
           setErrorBusqueda("No se encontraron licencias para ese DNI.");
@@ -83,7 +85,7 @@ export default function EmitirCopiaPage() {
 
     startTransition(async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/copias`, {
+        const res = await fetch(`${API_URL}/copias`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
