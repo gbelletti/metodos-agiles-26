@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
 
 interface FormData {
   nombre: string;
@@ -45,7 +45,7 @@ export default function ModificacionUsuarioPage() {
 
   useEffect(() => {
     if (!id) return;
-    fetch(`${API_URL}/api/usuarios/${id}`)
+    fetch(`${API_URL}/usuarios/${id}`)
       .then((res) => {
         if (!res.ok) throw new Error(`Error ${res.status}`);
         return res.json();
@@ -91,7 +91,7 @@ export default function ModificacionUsuarioPage() {
       if (cambiarContrasena && form.nuevaContrasena) {
         body.contrasena = form.nuevaContrasena;
       }
-      const res = await fetch(`${API_URL}/api/usuarios/${id}`, {
+      const res = await fetch(`${API_URL}/usuarios/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),

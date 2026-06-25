@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
 
 const TIPOS_DOCUMENTO = [
   { value: "DNI", label: "DNI" },
@@ -70,7 +70,7 @@ export default function ModificacionTitularPage() {
   // Carga los datos del titular al montar la página
   useEffect(() => {
     if (!id) return;
-    fetch(`${API_URL}/api/titulares/${id}`)
+    fetch(`${API_URL}/titulares/${id}`)
       .then((res) => {
         if (!res.ok) throw new Error(`Error ${res.status}`);
         return res.json();
@@ -114,7 +114,7 @@ export default function ModificacionTitularPage() {
     setErrors({});
     setLoadingSave(true);
     try {
-      const res = await fetch(`${API_URL}/api/titulares/${id}`, {
+      const res = await fetch(`${API_URL}/titulares/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
 
 interface VigenciaResult {
   fechaInicio: string;
@@ -28,7 +28,7 @@ export default function VigenciaPage() {
     setLoading(true);
     try {
       const res = await fetch(
-        `${API_URL}/api/vigencia/calcular?fechaNacimiento=${fechaNacimiento}&esPrimeraLicencia=${esPrimeraLicencia}`
+        `${API_URL}/vigencia/calcular?fechaNacimiento=${fechaNacimiento}&esPrimeraLicencia=${esPrimeraLicencia}`
       );
       if (!res.ok) throw new Error(`Error ${res.status}`);
       const data: VigenciaResult = await res.json();

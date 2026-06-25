@@ -10,6 +10,8 @@ import {
   ComprobantePagoDTO,
 } from "./impresionService";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
+
 type ClaseLicencia = "A" | "B" | "C" | "D" | "E" | "F" | "G";
 
 interface Titular {
@@ -145,7 +147,7 @@ export default function EmitirLicenciaPage() {
     if (!clase || !vigencia) return;
     try {
       const respuesta = await fetch(
-        `http://localhost:8080/api/costos/calcular?clase=${clase}&vigenciaAnios=${vigencia}`,
+        `${API_URL}/costos/calcular?clase=${clase}&vigenciaAnios=${vigencia}`,
       );
       if (respuesta.ok) {
         const total = await respuesta.json();
@@ -233,7 +235,7 @@ export default function EmitirLicenciaPage() {
       try {
         // esto se usa para realizar el alta del titular en el backend
         const resTitular = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/titulares`,
+          `${API_URL}/titulares`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -267,7 +269,7 @@ export default function EmitirLicenciaPage() {
 
         // esto se usa para realizar la emision de la licencia una vez creado el titular
         const resLicencia = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/licencias`,
+          `${API_URL}/licencias`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
