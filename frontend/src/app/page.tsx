@@ -189,8 +189,8 @@ export default function HomePage() {
               <span className="badge">Próximamente</span>
             </div>
 
-            {/* 3. Renovar licencia (próximamente) */}
-            <div className="menu-card disabled">
+            {/* 3. Renovar licencia (FUNCIONAL) */}
+            <Link href="/renovacion" className="menu-card">
               <div className="menu-card-icon">
                 <svg viewBox="0 0 24 24">
                   <path
@@ -204,8 +204,7 @@ export default function HomePage() {
               <div className="menu-card-desc">
                 Extender la vigencia de una licencia existente.
               </div>
-              <span className="badge">Próximamente</span>
-            </div>
+            </Link>
 
             {/* 4. Emitir copia (FUNCIONAL) */}
             <Link href="/copia" className="menu-card">

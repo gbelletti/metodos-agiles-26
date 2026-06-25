@@ -1,17 +1,18 @@
 package com.agile.backend.repository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import com.agile.backend.model.Licencia;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
 @Repository
 public interface LicenciaRepository extends JpaRepository<Licencia, Long> {
     List<Licencia> findByTitularId(Long titularId);
+
+    List<Licencia> findByTitularIdAndVigenteTrue(Long titularId);
 
     @Query("""
     SELECT l FROM Licencia l
@@ -24,7 +25,6 @@ public interface LicenciaRepository extends JpaRepository<Licencia, Long> {
       AND (:donante IS NULL OR t.donante = :donante)
     ORDER BY t.apellido, t.nombre, l.clase
     """)
-
     List<Licencia> findVigentesByCriterios(
         @Param("nombre") String nombre,
         @Param("apellido") String apellido,
@@ -52,4 +52,3 @@ public interface LicenciaRepository extends JpaRepository<Licencia, Long> {
         @Param("donante") Boolean donante
     );
 }
-
