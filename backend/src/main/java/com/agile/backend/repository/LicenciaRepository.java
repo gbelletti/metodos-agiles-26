@@ -8,4 +8,5 @@ import java.util.List;
 @Repository
 public interface LicenciaRepository extends JpaRepository<Licencia, Long> {
     List<Licencia> findByTitularId(Long titularId);
+    List<Licencia> findByTitularIdAndVigenteTrue(Long titularId);
 }

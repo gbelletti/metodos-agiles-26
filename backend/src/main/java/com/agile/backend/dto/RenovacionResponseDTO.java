@@ -1,12 +1,17 @@
 package com.agile.backend.dto;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import lombok.Getter;
 import lombok.Setter;
-import java.time.LocalDate;
 
 @Getter @Setter
-public class LicenciaResponseDTO {
+public class RenovacionResponseDTO {
+
+    // Datos de la nueva licencia emitida
     private Long id;
+    private Long licenciaAnteriorId;
     private String numeroDocumento;
     private String nombreTitular;
     private String apellidoTitular;
@@ -14,6 +19,8 @@ public class LicenciaResponseDTO {
     private LocalDate fechaEmision;
     private LocalDate fechaVencimiento;
     private Integer costoTotal;
-    private String observaciones;
-    private Boolean vigente;
+
+    // Datos del trámite
+    private String usuarioTramite;
+    private LocalDateTime fechaTramite;
 }
