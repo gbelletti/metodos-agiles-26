@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/licencias")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", "http://192.168.100.21:3000"})
 public class LicenciaController {
 
     private final LicenciaService service;
@@ -60,5 +60,30 @@ public class LicenciaController {
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    /**
+     * GET /api/licencias/vigentes?nombre=...&apellido=...&grupoSanguineo=...&factorRh=...&donante=...
+     * Lista licencias vigentes con filtros opcionales.
+     */
+    @GetMapping("/vigentes")
+    public ResponseEntity<List<LicenciaResponseDTO>> listarVigentes(
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) String apellido,
+            @RequestParam(required = false) String grupoSanguineo,
+            @RequestParam(required = false) String factorRh,
+            @RequestParam(required = false) Boolean donante) {
+        return ResponseEntity.ok(service.listarVigentesPorCriterios(nombre, apellido, grupoSanguineo, factorRh, donante));
+    }
+
+    // GET /api/licencias/vencidas?nombre=...&apellido=...&grupoSanguineo=...&factorRh=...&donante=...
+    @GetMapping("/vencidas")
+    public ResponseEntity<List<LicenciaResponseDTO>> listarVencidas(
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) String apellido,
+            @RequestParam(required = false) String grupoSanguineo,
+            @RequestParam(required = false) String factorRh,
+            @RequestParam(required = false) Boolean donante) {
+        return ResponseEntity.ok(service.listarVencidasPorCriterios(nombre, apellido, grupoSanguineo, factorRh, donante));
     }
 }

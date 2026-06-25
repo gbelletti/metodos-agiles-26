@@ -154,7 +154,7 @@ export default function HomePage() {
           </p>
 
           <div className="menu-grid">
-            {/* 1. Emitir una licencia (próximamente) */}
+            {/* 1. Emitir una licencia */}
             <Link href="/emitir" className="menu-card">
               <div className="menu-card-icon">
                 <svg viewBox="0 0 24 24">
@@ -213,18 +213,18 @@ export default function HomePage() {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                      d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75"
+                    d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75"
                   />
                 </svg>
               </div>
               <div className="menu-card-title">Emitir copia</div>
               <div className="menu-card-desc">
-               Duplicar una licencia emitida anteriormente.
+                Duplicar una licencia emitida anteriormente.
               </div>
             </Link>
 
-            {/* 5. Listado de licencias expiradas (próximamente) */}
-            <div className="menu-card disabled">
+            {/* 5. Listado de licencias expiradas */}
+            <Link href="/licencias-expiradas" className="menu-card">
               <div className="menu-card-icon">
                 <svg viewBox="0 0 24 24">
                   <path
@@ -240,11 +240,10 @@ export default function HomePage() {
               <div className="menu-card-desc">
                 Ver todas las licencias que superaron su fecha de vencimiento.
               </div>
-              <span className="badge">Próximamente</span>
-            </div>
+            </Link>
 
-            {/* 6. Listado de licencias vigentes por criterios (próximamente) */}
-            <div className="menu-card disabled">
+            {/* 6. Listado de licencias vigentes por criterios */}
+            <Link href="/licencias-vigentes" className="menu-card">
               <div className="menu-card-icon">
                 <svg viewBox="0 0 24 24">
                   <path
@@ -261,18 +260,23 @@ export default function HomePage() {
                 Filtrar licencias activas según tipo, persona u otros
                 parámetros.
               </div>
-              <span className="badge">Próximamente</span>
-            </div>
+            </Link>
 
             {/* Calcular vigencia (FUNCIONAL) */}
             <Link href="/vigencia" className="menu-card">
               <div className="menu-card-icon">
                 <svg viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"
+                  />
                 </svg>
               </div>
               <div className="menu-card-title">Calcular vigencia</div>
-              <div className="menu-card-desc">Calcular fechas de inicio y vencimiento de una licencia.</div>
+              <div className="menu-card-desc">
+                Calcular fechas de inicio y vencimiento de una licencia.
+              </div>
             </Link>
 
             {/* 7. Listado de usuarios administrativos (FUNCIONAL) */}
@@ -294,21 +298,24 @@ export default function HomePage() {
                 modificaciones.
               </div>
             </Link>
-             {/* Administración de Costos (Historia 3) */}
+            {/* Administración de Costos (Historia 3) */}
             <Link href="/admin/costos" className="menu-card">
               <div className="menu-card-icon">
                 {/* Ícono de un signo pesos para representar los costos */}
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" 
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
               </div>
-              <div className="menu-card-title">
-                Administrar Tabla de Costos
-              </div>
+              <div className="menu-card-title">Administrar Tabla de Costos</div>
               <div className="menu-card-desc">
                 Actualizar los precios base para la emisión de licencias.
               </div>
